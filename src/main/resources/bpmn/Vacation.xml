@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="Vacation" name="请假申请">
+        <startEvent id="startevent1" name="Start"></startEvent>
+        <userTask id="usertask1" name="填写请假申请"
+                  activiti:candidateStarterGroups="employee"></userTask>
+        <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+        <userTask id="usertask2" name="经理审批"
+                  activiti:candidateGroups="manager"></userTask>
+        <userTask id="usertask3" name="总监审批"
+                  activiti:candidateGroups="director"></userTask>
+        <userTask id="usertask4" name="人力资源审批"
+                  activiti:candidateGroups="hr"></userTask>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <sequenceFlow sourceRef="startevent1" targetRef="usertask1" id="flow1" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask1" targetRef="exclusiveGateWay" id="flow2" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="exclusivegateway1" targetRef="usertask2" id="flow3" name="">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${arg.days<=3}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="exclusivegateway1" targetRef="usertask3" id="flow4" name="">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${arg.days>3}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="usertask2" targetRef="usertask4" id="flow5" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask3" targetRef="usertask4" id="flow6" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask4" targetRef="endevent1" id="flow7" name=""></sequenceFlow>
+    </process>
+</definitions>

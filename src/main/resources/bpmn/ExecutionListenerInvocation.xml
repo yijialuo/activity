@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="Examples">
+    <process id="process1" name="process1">
+        <extensionElements>
+            <activiti:executionListener event="end"
+                                        class="com.activity.demo.listener.ExecutionListenerInvocation">
+                <activiti:field name="message" stringValue="流程结束"/>
+            </activiti:executionListener>
+            <activiti:executionListener event="start"
+                                        class="com.activity.demo.listener.ExecutionListenerInvocation">
+                <activiti:field name="message" stringValue="流程开始"/>
+            </activiti:executionListener>
+        </extensionElements>
+        <startEvent id="startevent1" name="Start"></startEvent>
+        <userTask id="usertask1" name="Task1">
+            <extensionElements>
+                <activiti:executionListener event="end"
+                                            class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="用户任务结束"/>
+                </activiti:executionListener>
+                <activiti:executionListener event="start"
+                                            class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="用户任务开始"/>
+                </activiti:executionListener>
+            </extensionElements>
+        </userTask>
+        <exclusiveGateway id="exclusiveGateway1" name="Exclusive Gateway">
+            <extensionElements>
+                <activiti:executionListener event="start"
+                                            class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="网关任务开始"/>
+                </activiti:executionListener>
+            </extensionElements>
+        </exclusiveGateway>
+        <intermediateThrowEvent id="signalintermediatethrowevent" name="SignalThrowEvent">
+            <extensionElements>
+                <activiti:executionListener event="end"
+                                            class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="中间事件结束"/>
+                </activiti:executionListener>
+                <activiti:executionListener event="start"
+                                            class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="中间事件开始"/>
+                </activiti:executionListener>
+            </extensionElements>
+        </intermediateThrowEvent>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <sequenceFlow sourceRef="startevent1" targetRef="exclusiveGateway1" id="flow1" name="">
+            <extensionElements>
+                <activiti:executionListener class="com.activity.demo.listener.ExecutionListenerInvocation">
+                    <activiti:field name="message" stringValue="从开始事件到网关的顺序流"/>
+                </activiti:executionListener>
+            </extensionElements>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="exclusiveGateway1" targetRef="usertask1" id="flow2" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask1" targetRef="signalintermediatethrowevent" id="flow3" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="signalintermediatethrowevent" targetRef="endevent1"></sequenceFlow>
+    </process>
+</definitions>

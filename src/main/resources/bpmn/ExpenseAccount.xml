@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="ExpenseAccount" name="报销申请">
+        <startEvent id="startevent1" name="Start"></startEvent>
+        <userTask id="usertask1"  name="填写申请" activiti:candidateGroups="employee"></userTask>
+        <userTask id="usertask2" name="财务审批" activiti:candidateGroups="finance"></userTask>
+        <serviceTask id="servicetask1" name="银行转账"
+                     activiti:expression="${processService.bankTransfer(execution)}"></serviceTask>
+        <boundaryEvent id="boundaryerror1" attachedToRef="servicetask1" cancelActivity="false">
+            <errorEventDefinition></errorEventDefinition>
+        </boundaryEvent>
+        <userTask id="usertask3" name="现金支付" activiti:candidateGroups="finance"></userTask>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <sequenceFlow sourceRef="startevent1" targetRef="usertask1" id="flow1" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask1" targetRef="usertask2" id="flow2" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask2" targetRef="servicetask1" id="flow3" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="boundaryerror1" targetRef="usertask3" id="flow4" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="servicetask1" targetRef="endevent1" id="flow5" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask3" targetRef="endevent1" id="flow6" name=""></sequenceFlow>
+    </process>
+</definitions>

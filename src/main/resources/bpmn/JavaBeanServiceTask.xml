@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="process1" name="process1">
+        <startEvent  id="startevent1" name="Start"></startEvent>
+        <serviceTask id="servicetask1" name="Service Task"
+                     activiti:expression="${myBean.print(execution)}"></serviceTask>
+        <serviceTask id="servicetask2" name="Service Task"
+                     activiti:expression="${execution.setVariable('myName',myBean.name)}"></serviceTask>
+        <userTask id="usertask1" name="End Task"></userTask>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <sequenceFlow sourceRef="startevent1" targetRef="servicetask1" id="flow1" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="servicetask1" targetRef="servicetask2" id="flow2" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="servicetask2" targetRef="usertask1" id="flow3" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask1" targetRef="endevent1" id="flow4" name=""></sequenceFlow>
+    </process>
+</definitions>

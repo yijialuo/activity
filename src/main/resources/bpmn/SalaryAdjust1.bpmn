@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="SalaryAdjust" name="资薪调整">
+        <startEvent id="startevent1" name="Start"></startEvent>
+        <userTask id="usertask1" name="填写调整申请" ></userTask>
+        <userTask id="usertask2" name="总监审批" activiti:candidateGroups="director"></userTask>
+        <userTask id="usertask3" name="人事审批" activiti:candidateGroups="hr"></userTask>
+        <userTask id="usertask4" name="老板审批" activiti:candidateGroups="boss"></userTask>
+        <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+        <serviceTask id="servicetask1" name="取消调整"
+                     activiti:expression="${processService.cancelAdjust(execution)}"></serviceTask>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <callActivity id="callactivity1" name="系统记录薪资" calledElement="CountSalary"></callActivity>
+        <sequenceFlow sourceRef="startevent1" targetRef="usertask1" id="flow1" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask1" targetRef="usertask2" id="flow2" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask2" targetRef="usertask3" id="flow3" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask3" targetRef="callactivity1" id="flow4" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="callactivity1" targetRef="usertask4" id="flow5" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="usertask4" targetRef="exclusivegateway1" id="flow6" name=""></sequenceFlow>
+        <sequenceFlow sourceRef="exclusivegateway1" targetRef="servicetask1" id="flow7">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${pass==false}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="exclusivegateway1" targetRef="endevent1" id="flow8" name="">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${pass==true}]]>
+            </conditionExpression>
+        </sequenceFlow>
+    </process>
+</definitions>
